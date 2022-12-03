@@ -18,6 +18,9 @@ setup_db(app)
 def setup_db(app):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    # See the SQL queries being printed on the terminal
+    app.config["SQLALCHEMY_ECHO"] = True
+    app.config["DEBUG"] = True
     db.app = app
     db.init_app(app)
 
