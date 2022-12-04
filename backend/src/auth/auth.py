@@ -3,6 +3,7 @@ import os
 import json
 from flask import request
 from functools import wraps
+import jwt
 from jose import jwt
 from urllib.request import urlopen
 
