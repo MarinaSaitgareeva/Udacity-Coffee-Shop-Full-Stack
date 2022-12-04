@@ -159,7 +159,7 @@ def modify_drink(payload, drink_id):
     recipe = body.get("recipe", None)
 
     try:
-        drink = Drink.query.filer(Drink.id == drink_id).one_or_none()
+        drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
 
         if drink is None:
             abort(404)
@@ -195,7 +195,7 @@ def modify_drink(payload, drink_id):
 @requires_auth("delete:drinks")
 def delete_drink(payload, drink_id):
     try:
-        drink = drink = Drink.query.filer(Drink.id == drink_id).one_or_none()
+        drink = drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
 
         if drink is None:
             abort(404)
@@ -207,7 +207,8 @@ def delete_drink(payload, drink_id):
             "delete": drink_id
         })
 
-    except Exception:
+    except Exception as e:
+        print(e)
         abort(422)
 
 
