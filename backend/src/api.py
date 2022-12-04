@@ -1,10 +1,26 @@
+try:
+    # 👇️ using Python 3.10+
+    from collections.abc import Iterable
+except ImportError:
+    # 👇️ using Python 3.10-
+    from collections import Iterable
+
+import collections.abc
+
+# 👇️ add attributes to `collections` module
+# before you import the package that causes the issue
+collections.Iterable = collections.abc.Iterable
+collections.Mapping = collections.abc.Mapping
+collections.MutableMapping = collections.abc.MutableMapping
+collections.MutableSet = collections.abc.MutableSet
+collections.Callable = collections.abc.Callable
+
 from flask import (
     Flask,
     request,
     jsonify,
     abort
 )
-from sqlalchemy import exc
 import json
 from flask_cors import CORS
 
@@ -13,18 +29,15 @@ from .database.models import (
     setup_db,
     Drink
 )
-from .auth.auth import (
-    AuthError,
-    requires_auth
-)
+from .auth.auth import AuthError, requires_auth
 
 
 app = Flask(__name__)
 setup_db(app)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 '''
-@TODO uncomment the following line to initialize the datbase
+@TODO uncomment the following line to initialize the database
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
