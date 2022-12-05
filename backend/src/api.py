@@ -34,7 +34,7 @@ from .auth.auth import AuthError, requires_auth
 
 app = Flask(__name__)
 setup_db(app)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
 
 '''
 @TODO uncomment the following line to initialize the database
@@ -42,8 +42,8 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
 '''
-# with app.app_context():
-#     db_drop_and_create_all()
+with app.app_context():
+    db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -67,7 +67,7 @@ def retrieve_drinks():
     return jsonify({
         "success": True,
         "drinks": [drink.short() for drink in drinks]
-    })
+    }), 200
 
 
 '''
@@ -92,7 +92,7 @@ def retrieve_drink_detail(payload):
     return jsonify({
         "success": True,
         "drinks": [drink.long() for drink in drinks]
-    })
+    }), 200
 
 
 '''
@@ -112,7 +112,7 @@ def retrieve_drink_detail(payload):
 def create_drink(payload):
     body = request.get_json()
 
-    if not ("title" in body and "recipe" in body):
+    if not ("title" in body or "recipe" in body):
         abort(422)
 
     title = body.get("title", None)
@@ -127,7 +127,7 @@ def create_drink(payload):
         return jsonify({
             "success": True,
             "drinks": [drink.long()]
-        })
+        }), 200
 
     except Exception:
         abort(422)
@@ -152,7 +152,7 @@ def create_drink(payload):
 def modify_drink(payload, drink_id):
     body = request.get_json()
 
-    if not ("title" in body and "recipe" in body):
+    if not ("title" in body or "recipe" in body):
         abort(422)
 
     title = body.get("title", None)
@@ -172,7 +172,7 @@ def modify_drink(payload, drink_id):
         return jsonify({
             "success": True,
             "drinks": [drink.long()]
-        })
+        }), 200
 
     except Exception:
         abort(422)
@@ -205,7 +205,7 @@ def delete_drink(payload, drink_id):
         return jsonify({
             "success": True,
             "delete": drink_id
-        })
+        }), 200
 
     except Exception as e:
         print(e)
